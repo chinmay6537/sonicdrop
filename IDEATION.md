@@ -4,7 +4,7 @@ Send small files (mainly photos) between two devices using **only sound**:
 no Wi-Fi, no Bluetooth, no cable. One device plays the data through its
 speaker and the other listens with its microphone.
 
-Status: **design only, no code yet.**
+Status: **step 1 (modem core + simulator) done; step 2 next.**
 
 ---
 
@@ -139,9 +139,28 @@ on every tone with heavy error correction): slower, but it works anywhere.
 
 ---
 
-## 6. Build order
+## 6. What step 1 taught us
 
-1. **Simulated channel and modem core** (Node, no audio hardware): OFDM, chirp
+- **Room echo limits speed more than background noise does.** At 30 cm in a
+  normal room, wall reflections and the reverb tail arrive after the 5.3 ms
+  cyclic prefix. They cap the usable SNR at about 10–13 dB, which is enough
+  for QPSK or 16-QAM at rate 1/2 but not denser. Holding the devices closer
+  (10–20 cm) is the cheapest speed-up, and the app should tell the user so.
+- **A single training snapshot isn't enough.** The channel and noise
+  estimates must keep learning from decoded symbols (decision-directed), or
+  echo and mid-frame interferers go unnoticed.
+- **Interferers must be handled robustly.** A loud whine skewed the drift fit
+  until the receiver learned to spot carriers far louder than their
+  neighbours. A few jammed carriers must not look like a broadband burst, so
+  the burst detector uses the median.
+- **The one-symbol header was the weak link in loud rooms.** Reusing the last
+  good header lifted the café case from 11 to 36 of 40 frames.
+- **Speech is mostly out of band.** Real speech energy falls about 12 dB per
+  octave above 800 Hz, which is why talkers barely hurt a 4–12 kHz signal.
+
+## 7. Build order
+
+1. ✅ **Simulated channel and modem core** (Node, no audio hardware): OFDM, chirp
    sync, equalizer, error correction, fountain code. Done when it decodes
    reliably through simulated noise, reverb and clock drift.
 2. **Loopback in the browser**: the Mac's speaker plays into its own mic.

@@ -1,0 +1,19 @@
+{
+  "name": "sonicdrop",
+  "version": "0.1.0",
+  "description": "Send photos and small files between devices using only sound",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "bench": "node bench/run.ts"
+  },
+  "engines": {
+    "node": ">=22.18"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.1"
+  }
+}
