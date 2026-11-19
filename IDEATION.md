@@ -16,6 +16,9 @@ Status: **design only, no code yet.**
 | Distance | **Close range, under 50 cm** | Phones side by side. Highest SNR, so the highest speed. |
 | Sound band | **Audible, about 4–12 kHz** | Fastest and most reliable on all phone speakers and mics. It sounds like modem hiss. |
 | Repo | Public, `sonicdrop` | |
+| Photo size | **Slider, user picks** (about 256–800 px) | A live estimate of the send time is shown while dragging. |
+| File types | **Photos, text and any small file** | Photos are compressed automatically. Other files are sent as they are (gzip if that helps). |
+| Test devices | **iPhone (Safari) and Mac laptop** | iOS Safari is the hardest target, so it gets tested from the very first build. |
 
 ---
 
@@ -136,8 +139,13 @@ on every tone with heavy error correction): slower, but it works anywhere.
 
 ---
 
-## 6. Open questions (to answer before coding)
+## 6. Build order
 
-- Photo quality vs. speed: what long-edge size and time budget?
-- Photos only, or any small file (text, PDF, contacts)?
-- Which exact phones and browsers will be tested (iPhone, Android, laptop)?
+1. **Simulated channel and modem core** (Node, no audio hardware): OFDM, chirp
+   sync, equalizer, error correction, fountain code. Done when it decodes
+   reliably through simulated noise, reverb and clock drift.
+2. **Loopback in the browser**: the Mac's speaker plays into its own mic.
+   Measure the real throughput.
+3. **iPhone ↔ Mac**: handshake, room sounding, adaptive bit-loading.
+4. **App interface**: pick a photo, quality slider with a live time estimate,
+   Send/Receive screens, progress display, offline PWA on GitHub Pages.
