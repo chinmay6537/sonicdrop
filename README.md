@@ -4,9 +4,9 @@ Send photos and small files between two devices using **only sound**: no
 Wi-Fi, no Bluetooth, no cables. One device plays the data through its speaker
 and the other listens through its microphone.
 
-Status: **step 1 of 4 done.** The modem core works end to end in a simulated
-room. The browser app and real-device testing come next. The full design is in
-[IDEATION.md](IDEATION.md).
+Status: **step 2 of 4 in progress.** The modem core works end to end in a
+simulated room (step 1). A browser lab page runs it on real speakers and mics
+(step 2). The full design is in [IDEATION.md](IDEATION.md).
 
 ## How it works
 
@@ -77,6 +77,26 @@ npm test
 npm run bench -- --profile all
 ```
 
+Open the lab page (http://localhost:5178) to test on real hardware:
+
+```bash
+npm run dev
+```
+
+Lab modes:
+- **Loopback**: the device plays to its own mic.
+- **Send** / **Receive**: two devices.
+- **Simulated room**: no sound.
+
+The page can save the raw mic recording as a WAV, which replays offline:
+
+```bash
+node bench/decode-wav.ts recording.wav
+```
+
+`node bench/make-wav.ts out.wav --profile standard --size 4000` writes a
+transmission to a WAV you can play from any device.
+
 Benchmark options: `--profile robust|standard|fast|turbo|all`, `--size <bytes>`,
 `--seed <n>`, `--only <room name>`.
 
@@ -88,6 +108,8 @@ src/fec/       convolutional code + soft Viterbi, CRC, interleaver, whitening
 src/fountain/  fountain code (systematic random linear over GF(2)), file envelope
 src/modem/     parameters, constellations, frame (de)modulator, Transmitter, Receiver
 src/sim/       simulated room: echo, speaker EQ, talkers, music, whine, claps, drift, clipping
-bench/         end-to-end benchmark across rooms and profiles
+src/io/        WAV read/write and resampling
+web/           lab page (Vite): loopback / send / receive / simulated
+bench/         benchmark across rooms and profiles; WAV make/decode tools
 test/          unit and end-to-end tests
 ```

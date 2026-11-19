@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SonicDrop Lab</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <main>
+    <header>
+      <h1>SonicDrop Lab</h1>
+      <p class="sub">Send data with sound only. This page tests the modem on real speakers and mics.</p>
+    </header>
+
+    <section class="card controls">
+      <label>Mode
+        <select id="mode">
+          <option value="loopback">Loopback: this device sends to itself</option>
+          <option value="send">Send: play to another device</option>
+          <option value="receive">Receive: listen for another device</option>
+          <option value="sim">Simulated room (no audio hardware)</option>
+        </select>
+      </label>
+      <label>Profile
+        <select id="profile">
+          <option value="robust">robust: BPSK 1/2 (≈2.3 kbps)</option>
+          <option value="standard" selected>standard: QPSK 1/2 (≈4.5 kbps)</option>
+          <option value="fast">fast: QPSK 2/3 (≈6 kbps)</option>
+          <option value="turbo">turbo: 16-QAM 1/2 (≈9 kbps)</option>
+        </select>
+      </label>
+      <label id="sizeRow">Test data size
+        <select id="size">
+          <option value="1000">1 KB</option>
+          <option value="4000" selected>4 KB</option>
+          <option value="15000">15 KB (a small photo)</option>
+        </select>
+      </label>
+      <label id="fileRow">Or send a file
+        <input id="file" type="file" />
+      </label>
+      <label id="scenarioRow" hidden>Simulated room
+        <select id="scenario"></select>
+      </label>
+      <label id="volumeRow">Volume <span id="volumeVal">70%</span>
+        <input id="volume" type="range" min="5" max="100" value="70" />
+      </label>
+      <div class="buttons">
+        <button id="start" class="primary">Start</button>
+        <button id="stop" disabled>Stop</button>
+      </div>
+      <p class="hint" id="hint">Turn the Mac's volume up, and keep the room fairly quiet for the first test.</p>
+    </section>
+
+    <section class="card">
+      <div class="statusline"><span id="status">Idle</span><span id="clock"></span></div>
+      <div class="meter" title="Microphone level"><div id="level"></div></div>
+      <div class="progress" title="File progress"><div id="progress"></div></div>
+      <dl class="stats">
+        <div><dt>Chirps found</dt><dd id="sDet">0</dd></div>
+        <div><dt>Frames OK</dt><dd id="sOk">0</dd></div>
+        <div><dt>Frames bad</dt><dd id="sBad">0</dd></div>
+        <div><dt>Headers lost</dt><dd id="sHdr">0</dd></div>
+        <div><dt>SNR</dt><dd id="sSnr">–</dd></div>
+        <div><dt>Clock drift</dt><dd id="sDrift">–</dd></div>
+        <div><dt>Blocks</dt><dd id="sBlocks">–</dd></div>
+        <div><dt>Speed</dt><dd id="sSpeed">–</dd></div>
+      </dl>
+      <h2>Signal quality per frequency band</h2>
+      <div class="bands" id="bands"></div>
+      <div class="bandaxis"><span>4 kHz</span><span>8 kHz</span><span>12 kHz</span></div>
+    </section>
+
+    <section class="card" id="resultCard" hidden>
+      <h2>Received</h2>
+      <p id="result"></p>
+      <img id="preview" alt="Received image" hidden />
+      <a id="download" class="button" hidden>Save received file</a>
+    </section>
+
+    <section class="card">
+      <h2>Debug</h2>
+      <p class="hint">Save what the mic heard. Replay it offline with <code>node bench/decode-wav.ts</code>.</p>
+      <button id="saveWav" disabled>Save mic recording (WAV)</button>
+      <pre id="log"></pre>
+    </section>
+  </main>
+  <script type="module" src="./main.ts"></script>
+</body>
+</html>

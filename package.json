@@ -4,6 +4,8 @@
   "description": "Send photos and small files between devices using only sound",
   "type": "module",
   "scripts": {
+    "dev": "vite",
+    "build": "vite build",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "bench": "node bench/run.ts"
@@ -14,6 +16,7 @@
   "devDependencies": {
     "@types/node": "^26.6.6",
     "typescript": "^7.0.2",
+    "vite": "^8.3.8",
     "vitest": "^5.1.1"
   }
 }
